@@ -8,20 +8,42 @@
     tools:context=".DetailsFragment">
 
 
-
+    <TextView
+        android:id="@+id/textAbilitiesHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:text="Abilities"
+        android:layout_marginTop="20dp"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:elevation="10dp"
+        android:layout_margin="10dp">
     <TextView
         android:id="@+id/textAbility1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:gravity="center"
-        android:text="KORAY" />
+        android:layout_gravity="center"
+        android:text="" />
+    </androidx.cardview.widget.CardView>
 
+    <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:elevation="10dp"
+    android:layout_margin="10dp">
     <TextView
         android:id="@+id/textAbility2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:gravity="center"
-        android:text="KORAY" />
+        android:layout_gravity="center"
+        android:text="" />
+</androidx.cardview.widget.CardView>
 </LinearLayout>

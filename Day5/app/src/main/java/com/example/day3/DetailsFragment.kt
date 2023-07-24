@@ -43,7 +43,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
 
             viewModel.liveDataAbilitiesList.observe(viewLifecycleOwner) { abilities ->
-                println("ABİLİTY FRAGMENT: " + abilities?.get(0)?.ability?.name)
+
                 textAbility1.text = abilities?.get(0)?.ability?.name
                 textAbility2.text = abilities?.get(1)?.ability?.name
             }

@@ -48,7 +48,7 @@ class PokemonViewModel @Inject constructor(
             }
 
             val abilityList=abilityResponse?.abilities ?: emptyList()
-            println("ABILITYNAME"+abilityList[1].ability?.name)
+
             _liveDataAbilitiesList.postValue(abilityList)
         }
     }
@@ -61,9 +61,8 @@ class PokemonViewModel @Inject constructor(
                 null
 
             }
-            println()
+
             val pokemonList= pokemonResponse?.results ?: emptyList()
-            println(pokemonList[1].name)
             _liveDataPokemonList.postValue(pokemonList)
 
         }
