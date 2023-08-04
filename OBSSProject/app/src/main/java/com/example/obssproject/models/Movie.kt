@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
 data class Movie(
     val adult: Boolean?,
     val backdrop_path: String?,
-    val genre_ids: List<Int>?,
+    //val genre_ids: List<Int?>?,
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     val original_language: String?,

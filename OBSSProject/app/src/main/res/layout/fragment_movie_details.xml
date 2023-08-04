@@ -40,4 +40,14 @@
         android:padding="10dp"
         android:text="TextView" />
 
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textOn=""
+        android:textOff=""
+        android:layout_gravity="end"
+        android:layout_margin="10dp"
+        android:background="@drawable/favourite_selector"/>
+
 </FrameLayout>

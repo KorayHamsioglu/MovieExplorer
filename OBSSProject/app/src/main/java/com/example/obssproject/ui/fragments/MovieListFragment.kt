@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,13 +14,16 @@ import com.example.obssproject.R
 import com.example.obssproject.adapters.MoviesAdapter
 import com.example.obssproject.databinding.FragmentMovieListBinding
 import com.example.obssproject.models.MoviesResponse
+import com.example.obssproject.ui.activities.MainActivity
 import com.example.obssproject.viewmodel.ListViewModel
+import com.example.obssproject.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.ItemClickListener {
 
     private val viewModel by viewModels<ListViewModel>()
+    private lateinit var sharedViewModel: SharedViewModel
 
     private lateinit var binding: FragmentMovieListBinding
     private lateinit var moviesAdapter: MoviesAdapter
@@ -28,8 +32,12 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
         super.onViewCreated(view, savedInstanceState)
         binding=FragmentMovieListBinding.bind(view)
 
+        sharedViewModel=(activity as MainActivity).sharedViewModel
+
+        listenSharedViewModel()
         initView(view)
         listenViewModel()
+
     }
 
     private fun initView(view: View) {
@@ -92,6 +100,12 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
         val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment(currentMovie)
 
         findNavController().navigate(action)
+    }
+
+    fun listenSharedViewModel(){
+        sharedViewModel.getFavouriteMovies().observe(viewLifecycleOwner, Observer { movies ->
+            moviesAdapter.setFavouriteMovies(movies)
+        })
     }
 
 }

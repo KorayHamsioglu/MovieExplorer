@@ -21,4 +21,12 @@
         android:layout_marginTop="150dp"
         android:padding="5dp"
         android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/imageViewGridFavourite"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/baseline_star_24" />
 </androidx.cardview.widget.CardView>

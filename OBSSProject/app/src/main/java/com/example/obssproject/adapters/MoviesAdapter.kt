@@ -18,6 +18,7 @@ import java.lang.IllegalArgumentException
 class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val movieList: ArrayList<Movie> = arrayListOf()
+    private val favouriteMovieList: ArrayList<Movie> = arrayListOf()
 
     interface ItemClickListener {
         fun onItemClick(itemPosition: Int)
@@ -37,6 +38,12 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
     fun updateList(items: List<Movie>?){
         movieList.clear()
         items?.let { movieList.addAll(it) }
+        notifyDataSetChanged()
+    }
+
+    fun setFavouriteMovies(items: List<Movie>?){
+        favouriteMovieList.clear()
+        items?.let { favouriteMovieList.addAll(it) }
         notifyDataSetChanged()
     }
 
@@ -62,8 +69,16 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val movie=movieList[position]
         when(holder){
-            is ListViewHolder-> holder.bind(movie)
-            is GridViewHolder-> holder.bind(movie)
+            is ListViewHolder-> {holder.bind(movie)
+                                  if (favouriteMovieList.contains(movie)){
+                                        holder.setFavouriteVisible()
+                                  }
+            }
+            is GridViewHolder-> {holder.bind(movie)
+                                    if (favouriteMovieList.contains(movie)){
+                                        holder.setFavouriteVisible()
+                                    }
+            }
             else -> throw IllegalArgumentException("Unknown ViewHolder")
         }
 
@@ -85,6 +100,8 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
     class ListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val movieTitle: TextView = itemView.findViewById(R.id.textViewTitle)
         private val movieImage: ImageView=itemView.findViewById(R.id.imageViewList)
+        private val favouriteImage: ImageView=itemView.findViewById(R.id.imageViewListFavourite)
+
 
         fun bind(item: Movie) {
             val imageUrl= IMAGE_BASE_URL+item.poster_path
@@ -93,11 +110,17 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
             Glide.with(movieImage).load(imageUrl).into(movieImage)
             Log.i("IMAGEE",imageUrl ?: "empty")
         }
+
+        fun setFavouriteVisible(){
+            favouriteImage.visibility= View.VISIBLE
+        }
     }
 
         class GridViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
             private val movieTitle: TextView=itemView.findViewById(R.id.textViewTitleGrid)
             private val movieImage: ImageView=itemView.findViewById(R.id.imageViewGrid)
+            private val favouriteImage: ImageView=itemView.findViewById(R.id.imageViewGridFavourite)
+
 
 
             fun bind(item: Movie){
@@ -105,6 +128,10 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
 
                 movieTitle.text=item.title ?: "empty"
                 Glide.with(movieImage).load(imageUrl).into(movieImage)
+            }
+
+            fun setFavouriteVisible(){
+                favouriteImage.visibility= View.VISIBLE
             }
 
     }

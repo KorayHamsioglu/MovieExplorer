@@ -8,11 +8,11 @@ import androidx.room.Query
 import com.example.obssproject.models.Movie
 
 @Dao
-interface MovieDAO {
+interface MovieDao {
 
 
     @Query("SELECT * FROM favorite_movies")
-    suspend fun getFavouriteMovies(): LiveData<List<Movie>>
+    fun getFavouriteMovies(): LiveData<List<Movie>>
 
     @Insert
     suspend fun insertMovie(movie: Movie)

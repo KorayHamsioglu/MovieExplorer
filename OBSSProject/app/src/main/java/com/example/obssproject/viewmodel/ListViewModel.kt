@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.obssproject.db.MovieDatabase
 import com.example.obssproject.models.Movie
 import com.example.obssproject.models.MoviesResponse
 import com.example.obssproject.services.MovieApiService
@@ -17,7 +18,6 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(
     private val movieApiService: MovieApiService
 ):ViewModel() {
-
     private val _liveDataMovieList=MutableLiveData<List<Movie>>()
     val liveDataMovieList: LiveData<List<Movie>> = _liveDataMovieList
 
