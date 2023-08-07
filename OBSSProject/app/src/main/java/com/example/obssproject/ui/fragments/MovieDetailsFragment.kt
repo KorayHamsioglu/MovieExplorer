@@ -23,6 +23,9 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
 
     private lateinit var binding: FragmentMovieDetailsBinding
     private lateinit var sharedViewModel: SharedViewModel
+    private val favouriteMovieIdList: ArrayList<Int> = arrayListOf()
+
+    private var isToggleCheckedByCode = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,13 +45,15 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
 
         view.apply {
            binding.textViewDetailTitle.text=movie.title
-            
             binding.toggleButton.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked){
-                    sharedViewModel.addFavourite(movie)
-                }else{
-                    sharedViewModel.deleteFavourite(movie)
+                if(!isToggleCheckedByCode){
+                    if (isChecked){
+                        sharedViewModel.addFavourite(movie)
+                    }else{
+                        sharedViewModel.deleteFavourite(movie)
+                    }
                 }
+
             }
 
         }
@@ -56,7 +61,12 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
 
     private fun listenSharedViewModel(movie: Movie) {
         sharedViewModel.getFavouriteMovies().observe(viewLifecycleOwner, Observer { movies ->
-            binding.toggleButton.isChecked = movies.contains(movie)
+            isToggleCheckedByCode=true
+            movies.let {
+                favouriteMovieIdList.addAll(it.map { movie -> movie.id ?: 0 })
+            }
+            binding.toggleButton.isChecked = favouriteMovieIdList.contains(movie.id)
+            isToggleCheckedByCode = false
 
         })
     }

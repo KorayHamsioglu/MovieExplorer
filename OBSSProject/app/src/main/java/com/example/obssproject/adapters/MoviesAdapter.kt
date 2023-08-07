@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,12 +21,26 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
 
     private val movieList: ArrayList<Movie> = arrayListOf()
     private val favouriteMovieList: ArrayList<Movie> = arrayListOf()
+    private val favouriteMovieIdList: ArrayList<Int> = arrayListOf()
 
     interface ItemClickListener {
         fun onItemClick(itemPosition: Int)
     }
 
     private var itemClickListener: ItemClickListener? = null
+
+
+    private val differCallback=object : DiffUtil.ItemCallback<Movie>(){
+        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+            return oldItem.id==newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+           return oldItem==newItem
+        }
+    }
+
+    val differ=AsyncListDiffer(this,differCallback)
 
     fun setItemClickListener(listener: ItemClickListener) {
         itemClickListener = listener
@@ -43,7 +59,11 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
 
     fun setFavouriteMovies(items: List<Movie>?){
         favouriteMovieList.clear()
-        items?.let { favouriteMovieList.addAll(it) }
+        items?.let {
+            favouriteMovieList.addAll(it)
+            favouriteMovieIdList.addAll(it.map { movie -> movie.id ?: 0 })
+        }
+
         notifyDataSetChanged()
     }
 
@@ -63,20 +83,24 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
     }
 
     override fun getItemCount(): Int {
-        return movieList.size
+        return differ.currentList.size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val movie=movieList[position]
+        val movie=differ.currentList[position]
         when(holder){
             is ListViewHolder-> {holder.bind(movie)
-                                  if (favouriteMovieList.contains(movie)){
+                                  if (favouriteMovieIdList.contains(movie.id)){
                                         holder.setFavouriteVisible()
+                                  }else{
+                                      holder.setFavouriteInvisible()
                                   }
             }
             is GridViewHolder-> {holder.bind(movie)
-                                    if (favouriteMovieList.contains(movie)){
+                                    if (favouriteMovieIdList.contains(movie.id)){
                                         holder.setFavouriteVisible()
+                                    }else{
+                                        holder.setFavouriteInvisible()
                                     }
             }
             else -> throw IllegalArgumentException("Unknown ViewHolder")
@@ -114,6 +138,10 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
         fun setFavouriteVisible(){
             favouriteImage.visibility= View.VISIBLE
         }
+
+        fun setFavouriteInvisible(){
+            favouriteImage.visibility= View.GONE
+        }
     }
 
         class GridViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -132,6 +160,10 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
 
             fun setFavouriteVisible(){
                 favouriteImage.visibility= View.VISIBLE
+            }
+
+            fun setFavouriteInvisible(){
+                favouriteImage.visibility= View.GONE
             }
 
     }

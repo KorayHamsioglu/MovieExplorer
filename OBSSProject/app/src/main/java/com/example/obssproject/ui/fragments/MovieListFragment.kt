@@ -2,11 +2,15 @@ package com.example.obssproject.ui.fragments
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.AbsListView
+import androidx.core.view.marginBottom
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LOG_TAG
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +19,8 @@ import com.example.obssproject.adapters.MoviesAdapter
 import com.example.obssproject.databinding.FragmentMovieListBinding
 import com.example.obssproject.models.MoviesResponse
 import com.example.obssproject.ui.activities.MainActivity
+import com.example.obssproject.utils.Constants.Companion.PAGE_SIZE
+import com.example.obssproject.utils.Resource
 import com.example.obssproject.viewmodel.ListViewModel
 import com.example.obssproject.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +33,59 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
 
     private lateinit var binding: FragmentMovieListBinding
     private lateinit var moviesAdapter: MoviesAdapter
+
+    var isLoading=false
+    var isScrolling=false
+    var isLastPage=false
+
+    val scrollListener= object : RecyclerView.OnScrollListener(){
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            if (recyclerView.layoutManager==GridLayoutManager(requireContext(),2)){
+                val layoutManager=recyclerView.layoutManager as GridLayoutManager
+                val firstItemPosition=layoutManager.findFirstVisibleItemPosition()
+                val visibleItemCount=layoutManager.childCount
+                val totalItemCount=layoutManager.itemCount
+
+                val isNotLoadingAndIsNotLastPage= !isLoading && !isLastPage
+                val isAtLastItem = firstItemPosition + visibleItemCount >= totalItemCount
+                val isNotAtBeginning = firstItemPosition >= 0
+                val isTotalMoreThanVisible = totalItemCount >= 20
+                val shouldPaginate = isNotLoadingAndIsNotLastPage && isAtLastItem && isNotAtBeginning &&
+                        isTotalMoreThanVisible && isScrolling
+                if(shouldPaginate) {
+                    viewModel.callMovieList()
+                    isScrolling = false
+                }
+            }else{
+                val layoutManager=recyclerView.layoutManager as LinearLayoutManager
+                val firstItemPosition=layoutManager.findFirstVisibleItemPosition()
+                val visibleItemCount=layoutManager.childCount
+                val totalItemCount=layoutManager.itemCount
+
+                val isNotLoadingAndIsNotLastPage= !isLoading && !isLastPage
+                val isAtLastItem = firstItemPosition + visibleItemCount >= totalItemCount
+                val isNotAtBeginning = firstItemPosition >= 0
+                val isTotalMoreThanVisible = totalItemCount >= 20
+                val shouldPaginate = isNotLoadingAndIsNotLastPage && isAtLastItem && isNotAtBeginning &&
+                        isTotalMoreThanVisible && isScrolling
+                if(shouldPaginate) {
+                    viewModel.callMovieList()
+                    isScrolling = false
+                }
+            }
+
+
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if(newState==AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                isScrolling=true
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +105,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
             val layoutManager=LinearLayoutManager(view.context)
             binding.recyclerViewMovies.layoutManager=layoutManager
             binding.recyclerViewMovies.adapter=moviesAdapter
+            binding.recyclerViewMovies.addOnScrollListener(scrollListener)
 
             moviesAdapter.setItemClickListener(this@MovieListFragment)
 
@@ -74,11 +134,8 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
 
     private fun listenViewModel(){
         viewModel.apply {
-            liveDataMovieList.observe(viewLifecycleOwner){
-                moviesAdapter.updateList(it)
-            }
             filteredLiveDataMovieList.observe(viewLifecycleOwner){
-                moviesAdapter.updateList(it)
+                moviesAdapter.differ.submitList(it.toList())
             }
             isGridMode.observe(viewLifecycleOwner){
                 val layoutManager = if (it) {
@@ -90,11 +147,36 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
                 moviesAdapter.updateViewMode(it)
 
             }
+            movies.observe(viewLifecycleOwner, Observer { response ->
+                when(response){
+                    is Resource.Success -> {
+                        hideLoadingBar()
+                        response.data?.let { moviesResponse ->
+                            moviesAdapter.differ.submitList(moviesResponse.results?.toList())
+                            val totalPages= moviesResponse.total_pages
+                            isLastPage= viewModel.moviesPage == totalPages
+                            if (isLastPage){
+                                binding.recyclerViewMovies.setPadding(0,0,0,0)
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        hideLoadingBar()
+                        response.message?.let { message ->
+                            Log.e(LOG_TAG,"An error occured: $message")
+                        }
+                    }
+                    is Resource.Loading -> {
+                        showLoadingBar()
+                    }
+                }
+
+            })
         }
     }
 
     override fun onItemClick(itemPosition: Int) {
-        val movieList= viewModel.liveDataMovieList.value
+        val movieList= viewModel.movies.value?.data?.results
         val currentMovie= movieList!![itemPosition-1]
 
         val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment(currentMovie)
@@ -106,6 +188,15 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
         sharedViewModel.getFavouriteMovies().observe(viewLifecycleOwner, Observer { movies ->
             moviesAdapter.setFavouriteMovies(movies)
         })
+    }
+
+    private fun hideLoadingBar(){
+        binding.progressBar.visibility=View.INVISIBLE
+        isLoading=false
+    }
+    private fun showLoadingBar(){
+        binding.progressBar.visibility=View.VISIBLE
+        isLoading=true
     }
 
 }
