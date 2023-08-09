@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <color name="yellow_200">#f6f192</color><!--Primary Dark-->
+    <color name="yellow_500">#ede219</color><!--Primary Light-->
+    <color name="yellow_600">#eccf0e</color><!--Primary Variant Dark-->
+    <color name="yellow_700">#ecb700</color><!--Primary Variant Light-->
+
+    <color name="green_500">#71c715</color>  <!--Secondary-->
+    <color name="green_800">#318f00</color>  <!--Secondary Variant-->
+
+    <color name="white_50">#ffffff</color> <!--Background Light-->
+
+    <color name="black_400">#b4b2b2</color>
+    <color name="black_800">#3a3939</color>
+
+
 </resources>

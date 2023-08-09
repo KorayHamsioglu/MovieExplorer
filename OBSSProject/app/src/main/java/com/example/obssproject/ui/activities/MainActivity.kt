@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var sharedViewModel: SharedViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_OBSSProject)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

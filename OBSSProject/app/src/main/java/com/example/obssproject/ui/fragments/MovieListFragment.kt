@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AbsListView
+import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -110,8 +111,24 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
             moviesAdapter.setItemClickListener(this@MovieListFragment)
 
 
-            binding.imageViewGrid.setOnClickListener {
-                viewModel.switchView()
+            binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+                when(menuItem.itemId){
+                    R.id.gridIcon -> {
+                        viewModel.switchView()
+
+                        if (viewModel.isGridMode.value == false){
+                            binding.topAppBar.menu.findItem(R.id.gridIcon)?.icon = ContextCompat.getDrawable(requireContext(), R.drawable.round_grid_view_24)
+
+                        }else{
+                            binding.topAppBar.menu.findItem(R.id.gridIcon)?.icon = ContextCompat.getDrawable(requireContext(), R.drawable.round_format_list_bulleted_24)
+
+                        }
+
+                        true
+                    }
+
+                    else -> {false}
+                }
             }
 
             binding.searchViewPopular.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener{
