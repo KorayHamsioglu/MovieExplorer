@@ -5,8 +5,8 @@
     <item
         android:id="@+id/gridIcon"
         android:icon="@drawable/round_grid_view_24"
-        android:title="Yarrak"
-        android:contentDescription="yarrak"
+        android:title="grid"
+        android:contentDescription="grid"
         app:showAsAction="ifRoom" />
 
 </menu>
