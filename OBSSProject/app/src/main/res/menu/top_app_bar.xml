@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@drawable/baseline_search_24"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/gridIcon"
         android:icon="@drawable/round_grid_view_24"
         android:title="grid"

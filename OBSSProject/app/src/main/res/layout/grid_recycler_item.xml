@@ -1,32 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="150dp"
+    android:layout_width="180dp"
+    android:layout_marginLeft="15dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/imageViewGridFavourite"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+
+        android:elevation="8dp"
+        app:srcCompat="@drawable/baseline_favorite_24" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageViewGrid"
+        android:layout_width="96dp"
+        android:layout_height="128dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="10dp"
+        android:elevation="10dp"
+        app:shapeAppearanceOverlay="@style/roundedImageView"
+        tools:srcCompat="@tools:sample/avatars" />
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="180dp"
     android:layout_height="200dp"
     android:layout_margin="15dp"
-    app:cardElevation="5dp"
+    app:cardElevation="7dp"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageViewGrid"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        tools:srcCompat="@tools:sample/avatars" />
+
 
     <TextView
         android:id="@+id/textViewTitleGrid"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="125dp"
+        android:textSize="10dp"
+        android:drawableStart="@drawable/baseline_movie_24"
         android:padding="5dp"
+        android:drawablePadding="5dp"
+        android:text="TextView" />
+    <TextView
+        android:id="@+id/textViewRatingGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:textSize="10dp"
+        android:drawableStart="@drawable/round_star_24"
+        android:padding="5dp"
+        android:drawablePadding="5dp"
         android:text="TextView" />
 
-    <ImageView
-        android:id="@+id/imageViewGridFavourite"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="10dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/baseline_star_24" />
+
 </com.google.android.material.card.MaterialCardView>
+</RelativeLayout>

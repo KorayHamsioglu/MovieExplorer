@@ -3,9 +3,13 @@ package com.example.obssproject.ui.fragments
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AbsListView
+import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
 import androidx.fragment.app.viewModels
@@ -24,6 +28,9 @@ import com.example.obssproject.utils.Constants.Companion.PAGE_SIZE
 import com.example.obssproject.utils.Resource
 import com.example.obssproject.viewmodel.ListViewModel
 import com.example.obssproject.viewmodel.SharedViewModel
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -88,17 +95,30 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding=FragmentMovieListBinding.bind(view)
 
+        val bottomNavigationView = requireActivity().findViewById<BottomAppBar>(R.id.bottomAppBar)
+        val floatingActionButton = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
+        bottomNavigationView.visibility=View.VISIBLE
+        floatingActionButton.visibility=View.VISIBLE
+
         sharedViewModel=(activity as MainActivity).sharedViewModel
+        println(sharedViewModel.getFavouriteMovies().value)
 
         listenSharedViewModel()
         initView(view)
         listenViewModel()
+        switchListener()
+        searchListener()
+
+
 
     }
+
+
 
     private fun initView(view: View) {
         view.apply {
@@ -111,41 +131,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
             moviesAdapter.setItemClickListener(this@MovieListFragment)
 
 
-            binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId){
-                    R.id.gridIcon -> {
-                        viewModel.switchView()
 
-                        if (viewModel.isGridMode.value == false){
-                            binding.topAppBar.menu.findItem(R.id.gridIcon)?.icon = ContextCompat.getDrawable(requireContext(), R.drawable.round_grid_view_24)
-
-                        }else{
-                            binding.topAppBar.menu.findItem(R.id.gridIcon)?.icon = ContextCompat.getDrawable(requireContext(), R.drawable.round_format_list_bulleted_24)
-
-                        }
-
-                        true
-                    }
-
-                    else -> {false}
-                }
-            }
-
-            binding.searchViewPopular.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                   return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (!TextUtils.isEmpty(newText)) {
-                        viewModel.filterMovies(newText!!)
-                    }else {
-                        viewModel.filterMovies("")
-                    }
-                    return true
-                }
-
-            })
         }
     }
 
@@ -207,6 +193,23 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
         })
     }
 
+    private fun switchListener() {
+        val fabButton = (requireActivity() as MainActivity).getFloatingActionButton()
+
+        fabButton.setOnClickListener {
+            viewModel.switchView()
+
+            if (viewModel.isGridMode.value == false){
+                fabButton.setImageResource(R.drawable.round_grid_view_24)
+
+            }else{
+                fabButton.setImageResource(R.drawable.round_format_list_bulleted_24)
+
+            }
+        }
+
+    }
+
     private fun hideLoadingBar(){
         binding.progressBar.visibility=View.INVISIBLE
         isLoading=false
@@ -216,4 +219,27 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list),MoviesAdapter.I
         isLoading=true
     }
 
-}
+
+    fun searchListener(){
+
+                    val searchView=binding.searchViewPopular
+                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            if (!TextUtils.isEmpty(newText)) {
+                                viewModel.filterMovies(newText!!)
+                            }else {
+                                viewModel.filterMovies("")
+                            }
+                            return true
+                        }
+
+                    })
+
+        }
+
+    }
+

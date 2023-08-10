@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="yellow_200">#f6f192</color><!--Primary Dark-->
-    <color name="yellow_500">#ede219</color><!--Primary Light-->
-    <color name="yellow_600">#eccf0e</color><!--Primary Variant Dark-->
-    <color name="yellow_700">#ecb700</color><!--Primary Variant Light-->
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryVariant">#1565C0</color>
 
-    <color name="green_500">#71c715</color>  <!--Secondary-->
-    <color name="green_800">#318f00</color>  <!--Secondary Variant-->
+    <!-- Secondary Colors -->
+    <color name="colorSecondary">#FFA000</color>
+    <color name="colorSecondaryVariant">#FFC107</color>
 
-    <color name="white_50">#ffffff</color> <!--Background Light-->
+    <!-- Background Color -->
+    <color name="colorBackground">#F5F5DC</color>
 
-    <color name="black_400">#b4b2b2</color>
-    <color name="black_800">#3a3939</color>
+    <!-- Text Colors -->
+    <color name="colorSurfacePrimary">#212121</color>
+    <color name="colorTextPrimary">#CCFFFFFF</color>
+
+    <color name="colorTextSecondary">#757575</color>
+
+    <color name="colorSemiTransparent">#66757575</color>
+    <color name="iconColor">#CCFFFFFF</color>
 
 
 </resources>

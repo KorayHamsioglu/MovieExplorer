@@ -14,6 +14,9 @@
     <action
         android:id="@+id/action_movieListFragment_to_movieDetailsFragment"
         app:destination="@id/movieDetailsFragment" />
+    <action
+        android:id="@+id/action_movieListFragment_to_favouritesFragment"
+        app:destination="@id/favouritesFragment" />
 </fragment>
     <fragment
         android:id="@+id/movieDetailsFragment"
@@ -26,6 +29,9 @@
             android:name="movie"
             app:argType="com.example.obssproject.models.Movie"
             app:nullable="false"/>
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_movieListFragment"
+            app:destination="@id/movieListFragment" />
     </fragment>
 
     <activity
@@ -35,5 +41,15 @@
         >
 
     </activity>
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.example.obssproject.ui.fragments.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" >
+
+        <action
+            android:id="@+id/action_favouritesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
 
 </navigation>

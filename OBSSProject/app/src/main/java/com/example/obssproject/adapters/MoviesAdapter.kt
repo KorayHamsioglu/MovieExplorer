@@ -123,16 +123,19 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
 
     class ListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val movieTitle: TextView = itemView.findViewById(R.id.textViewTitle)
+        private val movieRating: TextView=itemView.findViewById(R.id.textViewRating)
         private val movieImage: ImageView=itemView.findViewById(R.id.imageViewList)
         private val favouriteImage: ImageView=itemView.findViewById(R.id.imageViewListFavourite)
 
 
         fun bind(item: Movie) {
             val imageUrl= IMAGE_BASE_URL+item.poster_path
-
+            val rating=item.vote_average
+            val formattedRating=String.format("%.1f",rating)
             movieTitle.text = item.title ?: "empty"
+            movieRating.text=formattedRating
+
             Glide.with(movieImage).load(imageUrl).into(movieImage)
-            Log.i("IMAGEE",imageUrl ?: "empty")
         }
 
         fun setFavouriteVisible(){
@@ -146,6 +149,7 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
 
         class GridViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
             private val movieTitle: TextView=itemView.findViewById(R.id.textViewTitleGrid)
+            private val movieRating: TextView=itemView.findViewById(R.id.textViewRatingGrid)
             private val movieImage: ImageView=itemView.findViewById(R.id.imageViewGrid)
             private val favouriteImage: ImageView=itemView.findViewById(R.id.imageViewGridFavourite)
 
@@ -154,6 +158,9 @@ class MoviesAdapter(private var isGridMode: Boolean): RecyclerView.Adapter<Recyc
             fun bind(item: Movie){
                 val imageUrl=IMAGE_BASE_URL+item.poster_path
 
+                val rating=item.vote_average
+                val formattedRating=String.format("%.1f",rating)
+                movieRating.text=formattedRating
                 movieTitle.text=item.title ?: "empty"
                 Glide.with(movieImage).load(imageUrl).into(movieImage)
             }

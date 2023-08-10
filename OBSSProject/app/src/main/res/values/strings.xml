@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">OBSS Project</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="toolbar_title_main">Popular Movies</string>
+    <string name="toolbar_title_details">Movie Details</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="toolbar_title">Movie Details</string>
+
 </resources>
