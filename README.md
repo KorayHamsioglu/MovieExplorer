@@ -32,10 +32,10 @@ This app provides users with the following features:
 
 ## Screenshots
 
-<p float="left">
+
 <img width="206" alt="Ekran Resmi 2023-08-14 15 33 16" src="https://github.com/KorayHamsioglu/MovieExplorer/assets/87299676/a2554bb2-7312-4741-a388-f7649f655ca0">
 <img width="206" alt="Ekran Resmi 2023-08-14 15 35 22" src="https://github.com/KorayHamsioglu/MovieExplorer/assets/87299676/46594ee2-9700-4f13-ac6e-b9c97a5a7712">
 <img width="205" alt="Ekran Resmi 2023-08-14 15 36 22" src="https://github.com/KorayHamsioglu/MovieExplorer/assets/87299676/2c95b638-4cdb-4d0e-81ce-277d33d19e5b">
-</p>
+
 
 
